@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#### Working area 1 ####\n\n# You can import R packages here\n# Note:\n# The R packages you import must be in the standard CRAN repository and can work under R version 3.4.1\n\n# require(\"package1\")\n# require(\"package2\")\n\n\n#### Working area 2 ####\n\n# Here you can \n# 1. Load your facility files such as RData containing customer functions or trained models\n# 2. Set some global contants\n# Note:\n# 1. You should put your facility files in the same folder as this strategy.R\n# 2. When load files, ALWAYS use relative path such as load(\"functions.RData\"). DO NOT use absolute path such as load(\"C:\\Users\\Peter\\Documents\\functions.RData\")\n# 3. Be careful about the variable names in your facility data and global constants. Make sure they are not conflict with the variable names in test.R (such as initial_cash, time_list, etc.)\n\nasset = 3 # i.e. AU.SHF\n\n\n#### Working area 3 ####\n\n# You can set some initial values for memory variable here\nmemory = list()\n\n\n#### Working area 4 ####\n\n# Here is your strategy function\n# Note:\n# 1. DO NOT modify the function parameters\n# 2. The strategy function AWAYS returns a list contains two elements - position and memory\n\nstrategy = function(time, data, info, initial_cash, transaction, cash_balance, margin_balance, total_balance, position_current, memory=list()){\n  \n  # Buy AU.SHF at the very beggining (first minute) using half cash_balance\n  if(is.null(memory[['position']])){\n    memory[['position']] = rep(0, nrow(data))\n    average_price = rowMeans(data[, 1:4])[asset]\n    lot_value = average_price*info$unit_per_lot[asset]*info$margin_rate[asset]\n    memory[['position']][asset] = -round(0.5*initial_cash/(lot_value*(1+transaction)))\n  }\n  \n  return(list(position=memory[['position']], memory=memory))\n}\n",
+    "created" : 1508308807573.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4266504649",
+    "id" : "DE6B3FB2",
+    "lastKnownWriteTime" : 1506320910,
+    "last_content_update" : 1506320910,
+    "path" : "~/OneDrive/Документы/ботва/Statistical Prediction/MSBD 5013/R Platform/demo1/strategy.R",
+    "project_path" : "demo1/strategy.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

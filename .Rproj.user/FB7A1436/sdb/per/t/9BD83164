@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "install.packages(\"quantmod\")\ninstall.packages(\"xts\", repos=\"http://cloud.r-project.org\")\ninstall.packages(\"lattice\")\ninstall.packages(\"timeSeries\")\ninstall.packages(\"rugarch\")\nlibrary(quantmod)\nlibrary(lattice)\nlibrary(timeSeries)\nlibrary(rugarch)\nload(\"/Users/zkid18/OneDrive/Документы/ботва/Statistical\\ Prediction/MSBD\\ 5013/R\\ Platform/Data/data_20170717_20170915.RData\")\nnames(data_format1)\nab<-data_format1[[\"AG.SHF\"]]\nView(ab)\na<- xts(ab$close,order.by=ab$time)\nReturns = diff(log(a))\nReturns[as.character(head(index(a),1))] = 0\nhead(Returns)\nwindowLength = 300\nforeLength = length(Returns) - windowLength\nforecasts <- vector(mode=\"character\", length=foreLength)\n\nfor(d in 0:foreLength){\n  ReturnsOffset = Returns[(1+d):(windowLength+d)]\n  final.aic <- Inf\n  final.order <- c(0,0,0)\n  for (p in 0:5) for (q in 0:5){\n    if (p==0 && q==0){\n      next\n    }\n    arimaFit =  tryCatch( arima(ReturnsOffset, order=c(p, 0, q)), error=function(err) FALSE,warning=function(err) FALSE)\n    if(!is.logical(arimaFit)){\n      current.aic <- AIC(arimaFit)\n      if(current.aic < final.aic){\n        final.aic <- current.aic\n        final.order <- c(p,0,q)\n        final.arima <- arima(ReturnsOffset, order=final.order)\n      }\n    }\n    else{\n      next\n    }\n  }\n  spec = ugarchspec(\n    variance.model=list(garchOrder=c(1,1)),\n    mean.model=list(armaOrder=c(\n      final.order[1], final.order[3]\n    ), include.mean=TRUE),\n    distribution.model=\"sged\"\n  )\n  fit = tryCatch(\n    ugarchfit(\n      spec, ReturnsOffset, solver ='hybrid'\n    ), error=function(e) e, warning=function(w) w\n  )\n\n  if(is(fit, \"warning\")) {\n    forecasts[d+1] = paste(\n      index(ReturnsOffset[windowLength]), 1, sep=\",\"\n    )\n    print(\n      paste(\n        index(ReturnsOffset[windowLength]), 1, sep=\",\"\n      )\n    )\n  } else {\n    fore = ugarchforecast(fit, n.ahead=1)\n    ind = fore@forecast$seriesFor\n    forecasts[d+1] = paste(\n      colnames(ind), ifelse(ind[1] < 0, -1, 1), sep=\",\"\n    )\n    print(paste(colnames(ind), ifelse(ind[1] < 0, -1, 1), sep=\",\"))\n  }\n}\n\nwrite.csv(forecasts, file=\"forecasts.csv\", row.names=FALSE)\n",
+    "created" : 1508407787360.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4221053728",
+    "id" : "9BD83164",
+    "lastKnownWriteTime" : 1508412145,
+    "last_content_update" : 1508412145455,
+    "path" : "~/OneDrive/Документы/ботва/Statistical Prediction/MSBD 5013/R Platform/strategy_DW.R",
+    "project_path" : "strategy_DW.R",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
