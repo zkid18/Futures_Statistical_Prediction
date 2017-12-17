@@ -1,4 +1,4 @@
-# Futures_Statistical_Prediction
+# Futures Statistical Prediction
 This repository premiraly contains information about project on statiscal prediction course. 
 Later all folders, except Data_Wizards will be removed.
 
