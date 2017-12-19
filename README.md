@@ -1,6 +1,6 @@
 # Futures Statistical Prediction
 This repository premiraly contains information about project on statiscal prediction course. 
-Later all folders, except Data_Wizards will be removed.
+Later all folders, except Week3 will be removed.
 
 The best perfomance showed the strategy, based on ARIMA-GARCH model.
 
